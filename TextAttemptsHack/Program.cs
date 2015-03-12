@@ -53,20 +53,26 @@ namespace TextAttemptsHack
                     missingAcctIds.Add(attemptAcctNbr);
                 }
                 taDf.GetNextRecord();
-                Console.WriteLine("Processing {0}, line number {1}.", textAttemptsFileName, taDf.CurrentLineNumber);
+                if (taDf.CurrentLineNumber % 1000 == 0)
+                {
+                    Console.WriteLine("Processing {0}, line number {1}.", textAttemptsFileName, taDf.CurrentLineNumber);
+                }
             }
             var outputPath = args[2];
             var foundAccountFilePath = outputPath + "found_account_IDs.txt";
             using (var _str = new StreamWriter(foundAccountFilePath))
             {
+                _str.AutoFlush = true;
                 foreach (var kvp in foundAcctIds)
                 {
-                    _str.WriteLine("{0},{1}", kvp.Key, kvp.Value);
+                    var idList = string.Join("; ", kvp.Value);
+                    _str.WriteLine("{0},{1}", kvp.Key, idList);
                 }
             }
-            var missingAccountFilePath = outputPath + "missing_account_IDs.txt";
+            var missingAccountFilePath = outputPath + @"\missing_account_IDs.txt";
             using (var _str = new StreamWriter(missingAccountFilePath))
             {
+                _str.AutoFlush = true;
                 foreach (var accountNumber in missingAcctIds)
                 {
                     _str.WriteLine(accountNumber);
